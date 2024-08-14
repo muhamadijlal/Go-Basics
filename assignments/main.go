@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+	"strings"
+)
 
 func main() {
 	fmt.Println("hello world")
@@ -9,8 +13,8 @@ func main() {
 	// arraySign([]int{-2, 1})                   // -1
 	// arraySign([]int{-1, -2, -3, -4, 3, 2, 1}) // 1
 
-	// isAnagram("anak", "kana") // true
-	// isAnagram("anak", "mana") // false
+	// isAnagram("anak", "kana")       // true
+	// isAnagram("anak", "mana")       // false
 	// isAnagram("anagram", "managra") // true
 
 	// findTheDifference("abcd", "abcde") // 'e'
@@ -26,29 +30,92 @@ func main() {
 
 // https://leetcode.com/problems/sign-of-the-product-of-an-array
 func arraySign(nums []int) int {
-	// write code here
+	// write code her
+	sign := 1 // default value (positive value)
 
-	return 1 // if positive
-	// return -1 // if negative
+	for _, v := range nums {
+		if v == 0 {
+			return 0
+		}
+
+		if v < 1 {
+			sign *= -1
+		}
+
+	}
+
+	fmt.Println(sign)
+	return sign
 }
 
 // https://leetcode.com/problems/valid-anagram
 func isAnagram(s string, t string) bool {
 	// write code here
-	return false
+	s = strings.ToLower(s)
+	t = strings.ToLower(t)
+
+	if len(s) != len(t) {
+		fmt.Println(false)
+		return false
+	}
+
+	// Convert strings to slices of runes
+	str1 := []rune(s)
+	str2 := []rune(t)
+
+	// Sort the slices
+	sort.Slice(str1, func(i, j int) bool {
+		return str1[i] < str1[j]
+	})
+	sort.Slice(str2, func(i, j int) bool {
+		return str2[i] < str2[j]
+	})
+
+	// Compare sorted slices
+	for i := range str1 {
+		if str1[i] != str2[i] {
+			fmt.Println(false)
+			return false
+		}
+	}
+
+	fmt.Println(true)
+	return true
 }
 
 // https://leetcode.com/problems/find-the-difference
 func findTheDifference(s string, t string) byte {
-	// write code here
-	b := byte('a')
-	return b
+	cnt := [26]int{}
+	for _, ch := range s {
+		cnt[ch-'a']++
+	}
+
+	for i := 0; ; i++ {
+		ch := t[i]
+		cnt[ch-'a']--
+		if cnt[ch-'a'] < 0 {
+			fmt.Println(string(ch))
+			return ch
+		}
+	}
 }
 
 // https://leetcode.com/problems/can-make-arithmetic-progression-from-sequence
 func canMakeArithmeticProgression(arr []int) bool {
-	// write code here
-	return false
+	// Sort the array
+	sort.Ints(arr)
+
+	// Compute the common difference
+	diff := arr[1] - arr[0]
+
+	// Check the difference between each pair of consecutive elements
+	for i := 2; i < len(arr); i++ {
+		if arr[i]-arr[i-1] != diff {
+			return false
+		}
+	}
+
+	return true
 }
 
 // Deck represent "standard" deck consist of 52 cards
